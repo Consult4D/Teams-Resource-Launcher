@@ -2,13 +2,13 @@
   "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.17/MicrosoftTeams.schema.json",
   "manifestVersion": "1.17",
   "version": "1.0.0",
-  "id": "REPLACE-WITH-A-NEW-GUID",
+  "id": "732dafe5-1708-479e-ba48-adb5c13b14ff",
   "packageName": "com.example.teamsresourcelauncher",
   "developer": {
-    "name": "REPLACE-WITH-YOUR-ORGANIZATION",
-    "websiteUrl": "https://example.com/your-website",
-    "privacyUrl": "https://example.com/your-privacy-policy",
-    "termsOfUseUrl": "https://example.com/your-terms"
+    "name": "Consult4D",
+    "websiteUrl": "https://www.bbc.co.uk",
+    "privacyUrl": "https://www.bbc.co.uk",
+    "termsOfUseUrl": "https://www.bbc.co.uk"
   },
   "name": {
     "short": "Resource Launcher",
@@ -27,10 +27,10 @@
     {
       "entityId": "resource-launcher",
       "name": "Resource Launcher",
-      "contentUrl": "https://your-app-host.example.com/index.html",
-      "websiteUrl": "https://your-app-host.example.com/index.html",
+      "contentUrl": "https://consult4d.github.io/Teams-Resource-Launcher/",
+      "websiteUrl": "https://consult4d.github.io/Teams-Resource-Launcher/",
       "scopes": ["personal"]
     }
   ],
-  "validDomains": ["your-app-host.example.com"]
+  "validDomains": ["consult4d.github.io"]
 }

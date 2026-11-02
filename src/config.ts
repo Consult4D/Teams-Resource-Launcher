@@ -1,1 +1,1 @@
-export const resourceUrl = "https://REPLACE-WITH-YOUR-RESOURCE-URL";
+export const resourceUrl = "https://engage.cloud.microsoft/main/org/camwp.onmicrosoft.com/feed";

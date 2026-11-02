@@ -12,15 +12,27 @@ mobile.
 2. Edit `public/manifest.json`:
    - Set `id` to a new GUID.
    - Set the organization and public website, privacy, and terms URLs.
-   - Replace `your-app-host.example.com` with the HTTPS hostname where this
-     app's built files will be hosted. Do not include a scheme or path in
-     `validDomains`.
+   - The GitHub Pages URLs are already set for this repository:
+     `https://consult4d.github.io/Teams-Resource-Launcher/`. Keep
+     `consult4d.github.io` in `validDomains`.
 3. Replace the sample `public/color.png` and `public/outline.png` with your
    branded Teams app icons before submission. Teams requires a 192x192 color
    icon and a 32x32 transparent outline icon.
 
 The configured resource URL is fixed in the app build. Changing it requires
 rebuilding and redeploying the app.
+
+## Deploy to GitHub Pages
+
+The GitHub Actions workflow deploys the site to GitHub Pages whenever changes
+are pushed to `main`. To enable it, open the repository's **Settings → Pages**
+and set **Build and deployment → Source** to **GitHub Actions**. Merge the
+deployment setup into `main`; then check the **Actions** tab for a successful
+deployment. The published site URL is
+`https://consult4d.github.io/Teams-Resource-Launcher/`.
+
+The Teams manifest must use that published URL, and its `validDomains` entry
+must be the hostname only: `consult4d.github.io`.
 
 ## Build
 
@@ -31,10 +43,10 @@ npm install
 npm run build
 ```
 
-The production site is written to `dist/`. Host that directory at the HTTPS
-origin configured in `public/manifest.json`. The host must allow the site to be
-embedded in Microsoft Teams; the app itself uses TeamsJS `pages.currentApp.navigateToApp`
-to launch the destination rather than embedding the destination.
+The production site is written to `dist/`. GitHub Pages hosts that directory
+at the HTTPS URL configured in `public/manifest.json`. The app itself uses
+TeamsJS `pages.currentApp.navigateToApp` to launch the destination rather than
+embedding the destination.
 
 ## Package for Teams
 
