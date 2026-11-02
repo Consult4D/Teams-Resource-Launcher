@@ -1,0 +1,36 @@
+{
+  "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.17/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.17",
+  "version": "1.0.0",
+  "id": "REPLACE-WITH-A-NEW-GUID",
+  "packageName": "com.example.teamsresourcelauncher",
+  "developer": {
+    "name": "REPLACE-WITH-YOUR-ORGANIZATION",
+    "websiteUrl": "https://example.com/your-website",
+    "privacyUrl": "https://example.com/your-privacy-policy",
+    "termsOfUseUrl": "https://example.com/your-terms"
+  },
+  "name": {
+    "short": "Resource Launcher",
+    "full": "Teams Resource Launcher"
+  },
+  "description": {
+    "short": "Open your organization's configured resource from Teams.",
+    "full": "A lightweight personal Teams app that launches a deployment-configured resource using the Teams link handler."
+  },
+  "icons": {
+    "outline": "outline.png",
+    "color": "color.png"
+  },
+  "accentColor": "#464775",
+  "staticTabs": [
+    {
+      "entityId": "resource-launcher",
+      "name": "Resource Launcher",
+      "contentUrl": "https://your-app-host.example.com/index.html",
+      "websiteUrl": "https://your-app-host.example.com/index.html",
+      "scopes": ["personal"]
+    }
+  ],
+  "validDomains": ["your-app-host.example.com"]
+}
