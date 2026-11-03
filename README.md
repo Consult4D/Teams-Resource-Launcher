@@ -63,3 +63,23 @@ the required deployment settings and writes
 Store submission also requires organization-specific branding, legal URLs, and
 Microsoft's current app validation and publishing requirements. Those details
 cannot be completed until the publisher and hosting information are known.
+
+## Test Viva Engage embedding
+
+The separate `Engage Embed Test` app attempts to show the parent tenant's Viva
+Engage network inside a Teams tab. It uses the configured URL in `src/config.ts`
+and does not change the existing launcher tab at the default app URL.
+
+1. Deploy the updated build to the configured GitHub Pages site. The original
+   launcher continues to use `/Teams-Resource-Launcher/`; the test app opens
+   `/Teams-Resource-Launcher/?mode=engage-test`.
+2. Run `npm run package -- -EngageTest` to create
+   `dist/teams-viva-engage-embed-test.zip`.
+3. Sideload or distribute this package only to test users. A blank frame,
+   sign-in error, or tenant mismatch means this embedding approach is not
+   working in that Teams client and account context. Use **Open in browser** to
+   compare the parent network outside the embedded tab.
+
+The test app has a separate app ID and does not replace the Teams Store app.
+Embedding and authentication depend on Viva Engage's framing and sign-in
+policies; the test cannot bypass them.

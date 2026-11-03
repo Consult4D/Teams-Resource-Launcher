@@ -1,0 +1,39 @@
+{
+  "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.17/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.17",
+  "version": "1.0.0",
+  "id": "ef16bb57-7a8a-482a-ae95-2b764a863135",
+  "packageName": "com.consult4d.vivaengageembedtest",
+  "developer": {
+    "name": "Consult4D",
+    "websiteUrl": "https://www.bbc.co.uk",
+    "privacyUrl": "https://www.bbc.co.uk",
+    "termsOfUseUrl": "https://www.bbc.co.uk"
+  },
+  "name": {
+    "short": "Engage Embed Test",
+    "full": "Viva Engage Embed Test"
+  },
+  "description": {
+    "short": "Test parent-tenant Viva Engage inside Teams.",
+    "full": "A separate test app that attempts to display the parent-tenant Viva Engage network in a Teams tab."
+  },
+  "icons": {
+    "outline": "outline.png",
+    "color": "color.png"
+  },
+  "accentColor": "#464775",
+  "staticTabs": [
+    {
+      "entityId": "viva-engage-embed-test",
+      "name": "Engage Embed Test",
+      "contentUrl": "https://consult4d.github.io/Teams-Resource-Launcher/?mode=engage-test",
+      "websiteUrl": "https://consult4d.github.io/Teams-Resource-Launcher/?mode=engage-test",
+      "scopes": ["personal"]
+    }
+  ],
+  "validDomains": [
+    "consult4d.github.io",
+    "engage.cloud.microsoft"
+  ]
+}

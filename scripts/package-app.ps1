@@ -1,14 +1,42 @@
+param(
+    [switch]$EngageTest
+)
 $ErrorActionPreference = "Stop"
 
 $projectRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
-$manifestPath = Join-Path $projectRoot "public\manifest.json"
 $publicPath = Join-Path $projectRoot "public"
 $distPath = Join-Path $projectRoot "dist"
 $configPath = Join-Path $projectRoot "src\config.ts"
-$packagePath = Join-Path $distPath "teams-resource-launcher.zip"
+$manifestName = if ($EngageTest) {
+    "manifest-engage-test.json"
+} else {
+    "manifest.json"
+}
+$manifestPath = Join-Path $publicPath $manifestName
+$packageName = if ($EngageTest) {
+    "teams-viva-engage-embed-test.zip"
+} else {
+    "teams-resource-launcher.zip"
+}
+$packagePath = Join-Path $distPath $packageName
 
 if (-not (Test-Path -LiteralPath (Join-Path $distPath "index.html"))) {
     throw "Production output is missing. Run 'npm run build' first."
+}
+
+$config = Get-Content -LiteralPath $configPath -Raw
+if ($EngageTest) {
+    if ($config -notmatch 'engageUrl\s*=\s*"(?<url>[^"]+)"') {
+        throw "Could not read engageUrl from src/config.ts."
+    }
+} else {
+    if ($config -notmatch 'resourceUrl\s*=\s*"(?<url>[^"]+)"') {
+        throw "Could not read resourceUrl from src/config.ts."
+    }
+}
+$resourceUrl = [Uri]$Matches.url
+if ($resourceUrl.Scheme -ne "https" -or $resourceUrl.Host -match 'replace-with') {
+    throw "Set a real HTTPS resource URL in src/config.ts before packaging."
 }
 
 $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
@@ -32,13 +60,8 @@ if ($manifest.validDomains -notcontains $contentUrl.Host) {
     throw "Add the app host '$($contentUrl.Host)' to manifest.validDomains."
 }
 
-$config = Get-Content -LiteralPath $configPath -Raw
-if ($config -notmatch 'resourceUrl\s*=\s*"(?<url>[^"]+)"') {
-    throw "Could not read resourceUrl from src/config.ts."
-}
-$resourceUrl = [Uri]$Matches.url
-if ($resourceUrl.Scheme -ne "https" -or $resourceUrl.Host -match 'replace-with') {
-    throw "Set a real HTTPS resource URL in src/config.ts before packaging."
+if ($EngageTest -and $manifest.validDomains -notcontains $resourceUrl.Host) {
+    throw "Add the Engage host '$($resourceUrl.Host)' to manifest.validDomains."
 }
 
 foreach ($icon in @("color.png", "outline.png")) {
@@ -47,5 +70,18 @@ foreach ($icon in @("color.png", "outline.png")) {
     }
 }
 
-Compress-Archive -Path (Join-Path $publicPath "*") -DestinationPath $packagePath -Force
-Write-Output "Created $packagePath"
+$stagingPath = Join-Path $distPath ("package-staging-" + [Guid]::NewGuid().ToString("N"))
+try {
+    New-Item -ItemType Directory -Path $stagingPath | Out-Null
+    Copy-Item -LiteralPath $manifestPath -Destination (Join-Path $stagingPath "manifest.json")
+    foreach ($icon in @("color.png", "outline.png")) {
+        Copy-Item -LiteralPath (Join-Path $publicPath $icon) -Destination $stagingPath
+    }
+
+    Compress-Archive -Path (Join-Path $stagingPath "*") -DestinationPath $packagePath -Force
+    Write-Output "Created $packagePath"
+} finally {
+    if (Test-Path -LiteralPath $stagingPath) {
+        Remove-Item -LiteralPath $stagingPath -Recurse -Force
+    }
+}
