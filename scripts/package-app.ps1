@@ -1,42 +1,23 @@
-param(
-    [switch]$EngageTest
-)
 $ErrorActionPreference = "Stop"
 
 $projectRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
 $publicPath = Join-Path $projectRoot "public"
 $distPath = Join-Path $projectRoot "dist"
 $configPath = Join-Path $projectRoot "src\config.ts"
-$manifestName = if ($EngageTest) {
-    "manifest-engage-test.json"
-} else {
-    "manifest.json"
-}
-$manifestPath = Join-Path $publicPath $manifestName
-$packageName = if ($EngageTest) {
-    "teams-viva-engage-embed-test.zip"
-} else {
-    "teams-resource-launcher.zip"
-}
-$packagePath = Join-Path $distPath $packageName
+$manifestPath = Join-Path $publicPath "manifest.json"
+$packagePath = Join-Path $distPath "teams-resource-launcher.zip"
 
 if (-not (Test-Path -LiteralPath (Join-Path $distPath "index.html"))) {
     throw "Production output is missing. Run 'npm run build' first."
 }
 
 $config = Get-Content -LiteralPath $configPath -Raw
-if ($EngageTest) {
-    if ($config -notmatch 'engageUrl\s*=\s*"(?<url>[^"]+)"') {
-        throw "Could not read engageUrl from src/config.ts."
-    }
-} else {
-    if ($config -notmatch 'resourceUrl\s*=\s*"(?<url>[^"]+)"') {
-        throw "Could not read resourceUrl from src/config.ts."
-    }
+if ($config -notmatch 'engageUrl\s*=\s*"(?<url>[^"]+)"') {
+    throw "Could not read engageUrl from src/config.ts."
 }
 $resourceUrl = [Uri]$Matches.url
 if ($resourceUrl.Scheme -ne "https" -or $resourceUrl.Host -match 'replace-with') {
-    throw "Set a real HTTPS resource URL in src/config.ts before packaging."
+    throw "Set a real HTTPS Viva Engage URL in src/config.ts before packaging."
 }
 
 $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
@@ -60,7 +41,7 @@ if ($manifest.validDomains -notcontains $contentUrl.Host) {
     throw "Add the app host '$($contentUrl.Host)' to manifest.validDomains."
 }
 
-if ($EngageTest -and $manifest.validDomains -notcontains $resourceUrl.Host) {
+if ($manifest.validDomains -notcontains $resourceUrl.Host) {
     throw "Add the Engage host '$($resourceUrl.Host)' to manifest.validDomains."
 }
 

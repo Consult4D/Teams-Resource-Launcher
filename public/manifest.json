@@ -1,7 +1,7 @@
 {
   "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.17/MicrosoftTeams.schema.json",
   "manifestVersion": "1.17",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "id": "732dafe5-1708-479e-ba48-adb5c13b14ff",
   "developer": {
     "name": "Consult4D",
@@ -14,8 +14,8 @@
     "full": "Teams Resource Launcher"
   },
   "description": {
-    "short": "Open your organization's configured resource from Teams.",
-    "full": "A lightweight personal Teams app that launches a deployment-configured resource using the Teams link handler."
+    "short": "View your organization's Viva Engage network in Teams.",
+    "full": "A lightweight personal Teams app that displays a deployment-configured Viva Engage network inside Teams."
   },
   "icons": {
     "outline": "outline.png",
@@ -31,5 +31,5 @@
       "scopes": ["personal"]
     }
   ],
-  "validDomains": ["consult4d.github.io"]
+  "validDomains": ["consult4d.github.io", "engage.cloud.microsoft"]
 }

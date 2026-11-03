@@ -4,21 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#464775" />
-    <title>Resource Launcher</title>
+    <title>Viva Engage</title>
   </head>
   <body>
-    <main class="launcher">
-      <div class="brand-mark" aria-hidden="true">↗</div>
-      <p class="eyebrow">YOUR TEAMS RESOURCE</p>
-      <h1>Open your resource</h1>
-      <p class="description">
-        Launch the configured resource in the way that works best for your device.
-      </p>
-      <button id="open-resource" type="button" disabled>Open resource</button>
-      <p id="status" class="status" role="status" aria-live="polite">
-        Connecting to Microsoft Teams…
-      </p>
-    </main>
+    <iframe id="engage-frame" title="Viva Engage" hidden></iframe>
+    <p id="status" role="status" aria-live="polite">Connecting to Microsoft Teams…</p>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
