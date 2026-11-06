@@ -8,22 +8,24 @@ this was verified for the parent network configured here.
 
 ## Configure the app
 
-1. Edit `src/config.ts` and set `engageUrl` to the Viva Engage network's full
-   HTTPS URL.
+1. Copy `.env.example` to `.env.local` and set `VITE_ENGAGE_URL` to the Viva
+   Engage network's full HTTPS URL. `.env.local` is ignored by Git.
 2. Edit `public/manifest.json`:
    - Set `id` to a new GUID.
    - Set the organization and public website, privacy, and terms URLs.
    - The GitHub Pages URLs are already set for this repository:
      `https://consult4d.github.io/Teams-Resource-Launcher/`. Keep
-     `consult4d.github.io` and the Engage host (`engage.cloud.microsoft`) in
+     `consult4d.github.io` and the host from `VITE_ENGAGE_URL` in
      `validDomains`.
    - Increase `version` whenever you resubmit the app.
 3. Replace the sample `public/color.png` and `public/outline.png` with your
    branded Teams app icons before submission. Teams requires a 192x192 color
    icon and a 32x32 transparent outline icon.
 
-The Engage URL is fixed in the app build. Changing it requires rebuilding and
-redeploying the app.
+For GitHub Pages deployments, add a repository Actions secret named
+`VITE_ENGAGE_URL` under **Settings → Secrets and variables → Actions**. The
+deployment workflow uses it when building the site. Never put a customer URL
+in tracked source files or commit `.env.local`.
 
 ## Deploy to GitHub Pages
 
@@ -47,8 +49,10 @@ npm run build
 ```
 
 The production site is written to `dist/`. GitHub Pages hosts that directory
-at the HTTPS URL configured in `public/manifest.json`. The page embeds the
-configured Engage URL in a full-size frame.
+at the HTTPS URL configured in `public/manifest.json`. The URL is embedded in
+the generated client-side bundle so the browser can open it. An Actions secret
+keeps it out of repository source, but does not hide it from visitors to the
+public site. Use private/authenticated hosting if the URL must be confidential.
 
 ## Package for Teams
 
@@ -58,8 +62,9 @@ same app ID and hosted HTTPS origin in the manifest. Validate the package with
 the [Teams Developer Portal](https://dev.teams.microsoft.com/) before
 submitting it to your organization's app catalog or the Teams Store.
 
-On Windows, run `npm run package` after `npm run build`. The script checks for
-the required deployment settings and writes
+On Windows, run `npm run package` after `npm run build`. The script reads
+`VITE_ENGAGE_URL` from `.env.local` or the environment, checks for the
+required deployment settings, and writes
 `dist/teams-resource-launcher.zip`.
 
 Store submission also requires organization-specific branding, legal URLs, and

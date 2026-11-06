@@ -3,7 +3,6 @@ $ErrorActionPreference = "Stop"
 $projectRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
 $publicPath = Join-Path $projectRoot "public"
 $distPath = Join-Path $projectRoot "dist"
-$configPath = Join-Path $projectRoot "src\config.ts"
 $manifestPath = Join-Path $publicPath "manifest.json"
 $packagePath = Join-Path $distPath "teams-resource-launcher.zip"
 
@@ -11,13 +10,29 @@ if (-not (Test-Path -LiteralPath (Join-Path $distPath "index.html"))) {
     throw "Production output is missing. Run 'npm run build' first."
 }
 
-$config = Get-Content -LiteralPath $configPath -Raw
-if ($config -notmatch 'engageUrl\s*=\s*"(?<url>[^"]+)"') {
-    throw "Could not read engageUrl from src/config.ts."
+$resourceUrlText = [Environment]::GetEnvironmentVariable("VITE_ENGAGE_URL")
+if (-not $resourceUrlText) {
+    $envFilePath = Join-Path $projectRoot ".env.local"
+    if (Test-Path -LiteralPath $envFilePath) {
+        foreach ($line in Get-Content -LiteralPath $envFilePath) {
+            if ($line -match '^\s*VITE_ENGAGE_URL\s*=\s*(?<value>.*)\s*$') {
+                $resourceUrlText = $Matches.value.Trim()
+                if (($resourceUrlText.StartsWith('"') -and $resourceUrlText.EndsWith('"')) -or
+                    ($resourceUrlText.StartsWith("'") -and $resourceUrlText.EndsWith("'"))) {
+                    $resourceUrlText = $resourceUrlText.Substring(1, $resourceUrlText.Length - 2)
+                }
+            }
+        }
+    }
 }
-$resourceUrl = [Uri]$Matches.url
+
+if (-not $resourceUrlText) {
+    throw "Set VITE_ENGAGE_URL in .env.local or the environment before packaging."
+}
+
+$resourceUrl = [Uri]$resourceUrlText
 if ($resourceUrl.Scheme -ne "https" -or $resourceUrl.Host -match 'replace-with') {
-    throw "Set a real HTTPS Viva Engage URL in src/config.ts before packaging."
+    throw "VITE_ENGAGE_URL must be a real HTTPS Viva Engage URL."
 }
 
 $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
